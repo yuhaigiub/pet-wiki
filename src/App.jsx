@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Autocomplete, TextField, Button, Box, CssBaseline } from "@mui/material";
+import { Autocomplete, TextField, Button, Box, CssBaseline, Typography } from "@mui/material";
 import ImageDisplay from "./components/ImageDisplay/ImageDisplay";
 import InfoDisplay from "./components/InfoDisplay/InfoDisplay";
 
@@ -77,7 +77,7 @@ const options = [
 const header = {
 	method: "GET",
 	headers: {
-		"x-api-key": process.env.API_KEY,
+		"x-api-key": process.env.REACT_APP_API_KEY,
 	},
 };
 
@@ -95,7 +95,7 @@ const App = () => {
 
 	useEffect(() => {
 		if (breedId !== "") {
-			console.log(`looking for ${breedId}`);
+			// console.log(`looking for ${breedId}`);
 			fetch(
 				`https://api.thecatapi.com/v1/images/search?order=ASC&limit=100&page=0&breed_ids=${breedId}`,
 				header
@@ -104,7 +104,7 @@ const App = () => {
 					return response.json();
 				})
 				.then((response) => {
-					console.log(response);
+					// console.log(response);
 					setData(response);
 				})
 				.catch((error) => {
@@ -116,7 +116,7 @@ const App = () => {
 					return response.json();
 				})
 				.then((response) => {
-					console.log(response);
+					// console.log(response);
 					setBio(response[0]);
 				})
 				.catch((error) => {
@@ -127,15 +127,39 @@ const App = () => {
 
 	return (
 		<>
-			<Box sx={{ height: "10vh" }}></Box>
-			<Box display="flex" sx={{ width: "100vw", height: "90vh" }}>
+			<Box
+				sx={{
+					width: "100vw",
+					height: "10vh",
+					backgroundColor: "primary.main",
+					display: "flex",
+					justifyContent: "center",
+					alignItems: "center",
+				}}>
+				<Typography
+					sx={{
+						color: "white",
+						fontFamily: "Audiowide, san-serif",
+						fontSize: { xl: "2.5rem", lg: "2.5rem", md: "1.5rem", sm: "1.5rem", xs: "1.5rem" },
+					}}>
+					Welcome to the Pet Wiki
+				</Typography>
+			</Box>
+			<Box
+				sx={{
+					display: "flex",
+					flexDirection: { xl: "row", lg: "row", md: "column", sm: "column", xs: "column" },
+					width: "100vw",
+					height: "90vh",
+				}}>
 				<CssBaseline />
 				<Box
 					sx={{
-						width: "45%",
-						height: "100%",
+						width: { xl: "45%", lg: "45%", md: "100%", sm: "100%", xs: "100%" },
+						height: { xl: "100%", lg: "100%", md: "65%", sm: "65%", xs: "65%" },
 						px: "4%",
 						boxSizing: "border-box",
+						mb: 3,
 					}}>
 					<Box
 						component="form"
@@ -166,15 +190,46 @@ const App = () => {
 							Search
 						</Button>
 					</Box>
-					{data.length !== 0 && (
+					{data.length !== 0 ? (
 						<ImageDisplay
 							data={data}
 							sx={{ width: "100%", height: "70%", border: "3px solid red" }}
 						/>
+					) : (
+						<Box
+							sx={{
+								width: "100%",
+								height: "70%",
+								// border: "3px solid red",
+								backgroundColor: "primary.main",
+							}}></Box>
 					)}
 				</Box>
-				<Box sx={{ width: "65%", height: "100%", overflow: "auto", boxSizing: "border-box" }}>
-					{bio.id !== "undefined" && <InfoDisplay bio={bio} />}
+				<Box
+					sx={{
+						width: { xl: "65%", lg: "65%", md: "100%", sm: "100%", xs: "100%" },
+						height: { xl: "100%", lg: "100%", md: "35%", sm: "35%", xs: "35%" },
+						overflow: "auto",
+						boxSizing: "border-box",
+						mb: 5,
+					}}>
+					{bio.id !== "undefined" && (
+						<InfoDisplay
+							bio={bio}
+							sx={{
+								display: "flex",
+								flexDirection: "column",
+								alignItems: {
+									xl: "flex-start",
+									lg: "flex-start",
+									md: "center",
+									sm: "center",
+									xs: "center",
+								},
+								textAlign: { xl: "left", lg: "left", md: "center", sm: "center", xs: "center" },
+							}}
+						/>
+					)}
 				</Box>
 			</Box>
 		</>

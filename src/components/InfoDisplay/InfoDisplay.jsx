@@ -10,10 +10,10 @@ const SimpleRating = ({ label, value }) => {
 	);
 };
 
-const InfoDisplay = ({ bio }) => {
+const InfoDisplay = ({ bio, sx }) => {
 	return (
-		<Box>
-			<Typography component="h1" variant="h2">
+		<Box sx={sx}>
+			<Typography component="h1" sx={{ fontSize: "4rem" }}>
 				{bio.name}
 			</Typography>
 			<Typography>{bio.description}</Typography>
