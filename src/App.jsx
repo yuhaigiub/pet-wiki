@@ -95,7 +95,7 @@ const App = () => {
 
 	useEffect(() => {
 		if (breedId !== "") {
-			// console.log(`looking for ${breedId}`);
+			console.log(`looking for ${breedId}`);
 			fetch(
 				`https://api.thecatapi.com/v1/images/search?order=ASC&limit=100&page=0&breed_ids=${breedId}`,
 				header
@@ -104,7 +104,7 @@ const App = () => {
 					return response.json();
 				})
 				.then((response) => {
-					// console.log(response);
+					console.log(response);
 					setData(response);
 				})
 				.catch((error) => {
@@ -116,8 +116,12 @@ const App = () => {
 					return response.json();
 				})
 				.then((response) => {
-					// console.log(response);
-					setBio(response[0]);
+					console.log(response);
+					if (response.length !== 0) {
+						setBio(response[0]);
+					} else {
+						setBio({ id: "undefined" });
+					}
 				})
 				.catch((error) => {
 					console.log(error);
