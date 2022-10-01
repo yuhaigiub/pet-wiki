@@ -10,8 +10,7 @@ const SimpleRating = ({ label, value }) => {
 	);
 };
 
-const InfoDisplay = ({ data }) => {
-	const bio = data[0].breeds[0];
+const InfoDisplay = ({ bio }) => {
 	return (
 		<Box>
 			<Typography component="h1" variant="h2">

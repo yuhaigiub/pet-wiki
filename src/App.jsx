@@ -77,13 +77,14 @@ const options = [
 const header = {
 	method: "GET",
 	headers: {
-		// "x-api-key": "",
+		"x-api-key": process.env.API_KEY,
 	},
 };
 
 const App = () => {
 	const [breedId, setBreedId] = useState("");
 	const [data, setData] = useState([]);
+	const [bio, setBio] = useState({ id: "undefined" });
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
@@ -105,6 +106,18 @@ const App = () => {
 				.then((response) => {
 					console.log(response);
 					setData(response);
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+
+			fetch(`https://api.thecatapi.com/v1/breeds/search?q=${breedId}`, header)
+				.then((response) => {
+					return response.json();
+				})
+				.then((response) => {
+					console.log(response);
+					setBio(response[0]);
 				})
 				.catch((error) => {
 					console.log(error);
@@ -161,7 +174,7 @@ const App = () => {
 					)}
 				</Box>
 				<Box sx={{ width: "65%", height: "100%", overflow: "auto", boxSizing: "border-box" }}>
-					{data.length !== 0 && <InfoDisplay data={data} />}
+					{bio.id !== "undefined" && <InfoDisplay bio={bio} />}
 				</Box>
 			</Box>
 		</>
