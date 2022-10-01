@@ -84,7 +84,7 @@ const header = {
 const App = () => {
 	const [breedId, setBreedId] = useState("");
 	const [data, setData] = useState([]);
-	const [bio, setBio] = useState({ id: "undefined" });
+	const [bio, setBio] = useState([]);
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
@@ -110,24 +110,24 @@ const App = () => {
 				.catch((error) => {
 					console.log(error);
 				});
+		}
+	}, [breedId]);
 
-			fetch(`https://api.thecatapi.com/v1/breeds/search?q=${breedId}`, header)
+	useEffect(() => {
+		if (bio.length === 0) {
+			fetch(`https://api.thecatapi.com/v1/breeds`, header)
 				.then((response) => {
 					return response.json();
 				})
 				.then((response) => {
 					console.log(response);
-					if (response.length !== 0) {
-						setBio(response[0]);
-					} else {
-						setBio({ id: "undefined" });
-					}
+					setBio(response);
 				})
 				.catch((error) => {
 					console.log(error);
 				});
 		}
-	}, [breedId]);
+	}, [bio]);
 
 	return (
 		<>
@@ -217,9 +217,9 @@ const App = () => {
 						boxSizing: "border-box",
 						mb: 5,
 					}}>
-					{bio.id !== "undefined" && (
+					{breedId !== "" && (
 						<InfoDisplay
-							bio={bio}
+							bio={bio.find((value) => value.id === breedId)}
 							sx={{
 								display: "flex",
 								flexDirection: "column",
