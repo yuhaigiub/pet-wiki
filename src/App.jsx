@@ -155,6 +155,7 @@ const App = () => {
 					flexDirection: { xl: "row", lg: "row", md: "column", sm: "column", xs: "column" },
 					width: "100vw",
 					height: "90vh",
+					mt: "2vh",
 				}}>
 				<CssBaseline />
 				<Box

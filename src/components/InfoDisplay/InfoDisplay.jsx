@@ -5,23 +5,23 @@ const SimpleRating = ({ label, value }) => {
 	return (
 		<>
 			<Typography component="legend">{label}</Typography>
-			<Rating name={label} value={value} />
+			<Rating readOnly name={label} value={value} />
 		</>
 	);
 };
 
 const InfoDisplay = ({ bio, sx }) => {
 	return (
-		<Box sx={sx}>
-			<Typography component="h1" sx={{ fontSize: "4rem" }}>
+		<Box sx={{ ...sx, px: 3, boxSizing: "border-box" }}>
+			<Typography
+				component="h1"
+				sx={{ fontSize: { xl: "4rem", lg: "rem", md: "3rem", sm: "3rem", xs: "3rem" }, my: "1%" }}>
 				{bio.name}
 			</Typography>
-			<Typography>{bio.description}</Typography>
-			<br />
+			<Typography sx={{ my: 2 }}>{bio.description}</Typography>
+			<Typography sx={{ mb: "5%" }}>Temperament: {bio.temperament}</Typography>
 			<SimpleRating label="Adaptability" value={bio.adaptability} />
 			<SimpleRating label="Affection Level" value={bio.affection_level} />
-			<Typography>Temperament: {bio.temperament}</Typography>
-			<br />
 			<SimpleRating label="Child Friendly" value={bio.child_friendly} />
 			<SimpleRating label="Dog Friendly" value={bio.dog_friendly} />
 			<SimpleRating label="Stranger Frienly" value={bio.stranger_friendly} />
