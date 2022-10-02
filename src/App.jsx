@@ -198,7 +198,11 @@ const App = () => {
 					{data.length !== 0 ? (
 						<ImageDisplay
 							data={data}
-							sx={{ width: "100%", height: "70%", border: "3px solid red" }}
+							sx={{
+								width: "100%",
+								height: "70%",
+								// border: "3px solid red"
+							}}
 						/>
 					) : (
 						<Box
