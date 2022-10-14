@@ -10,12 +10,36 @@ const SimpleRating = ({ label, value }) => {
 	);
 };
 
-const InfoDisplay = ({ bio, sx }) => {
+const InfoDisplayCat = ({ bio, sx }) => {
+	console.log(`bio cat is ${JSON.stringify(bio)}`);
 	return (
-		<Box sx={{ ...sx, px: 3, boxSizing: "border-box" }}>
+		<Box
+			sx={{
+				...sx,
+				px: 3,
+				py: 3,
+				boxSizing: "border-box",
+				width: {
+					xs: "90vw",
+					sm: "90vw",
+					md: "90vw",
+					lg: "90vw",
+					xl: "45vw",
+				},
+				// border: "5px solid black",
+			}}>
 			<Typography
 				component="h1"
-				sx={{ fontSize: { xl: "4rem", lg: "rem", md: "3rem", sm: "3rem", xs: "3rem" }, my: "1%" }}>
+				sx={{
+					fontSize: {
+						xl: "4rem",
+						lg: "rem",
+						md: "3rem",
+						sm: "3rem",
+						xs: "3rem",
+					},
+					my: "1%",
+				}}>
 				{bio.name}
 			</Typography>
 			<Typography sx={{ my: 2 }}>{bio.description}</Typography>
@@ -35,4 +59,4 @@ const InfoDisplay = ({ bio, sx }) => {
 	);
 };
 
-export default InfoDisplay;
+export default InfoDisplayCat;

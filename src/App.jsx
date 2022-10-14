@@ -1,10 +1,13 @@
 import React from "react";
-import { useState, useEffect } from "react";
-import { Autocomplete, TextField, Button, Box, CssBaseline, Typography } from "@mui/material";
+import { useState, useEffect, useMemo } from "react";
+import { Box, CssBaseline } from "@mui/material";
 import ImageDisplay from "./components/ImageDisplay/ImageDisplay";
-import InfoDisplay from "./components/InfoDisplay/InfoDisplay";
+import InfoDisplayCat from "./components/InfoDisplay/InfoDisplayCat";
+import InfoDisplayDog from "./components/InfoDisplay/InfoDisplayDog";
+import Header from "./components/Header/Header";
+import Searchbar from "./components/Searchbar/Searchbar";
 
-const options = [
+const optionsCats = [
 	{ id: "abys", name: "Abyssinian" },
 	{ id: "aege", name: "Aegean" },
 	{ id: "abob", name: "American Bobtail" },
@@ -74,17 +77,132 @@ const options = [
 	{ id: "ycho", name: "York Chocolate" },
 ];
 
-const header = {
-	method: "GET",
-	headers: {
-		"x-api-key": process.env.REACT_APP_API_KEY,
-	},
-};
+const optionsDogs = [
+	{ id: "1", name: "Affenpinscher" },
+	{ id: "2", name: "Afghan Hound" },
+	{ id: "3", name: "African Hunting Dog" },
+	{ id: "4", name: "Airedale Terrier" },
+	{ id: "5", name: "Akbash Dog" },
+	{ id: "6", name: "Akita" },
+	{ id: "7", name: "Alapaha Blue Blood Bulldog" },
+	{ id: "8", name: "Alaskan Husky" },
+	{ id: "9", name: "Alaskan Malamute" },
+	{ id: "10", name: "American Bulldog" },
+	{ id: "11", name: "American Bully" },
+	{ id: "12", name: "American Eskimo Dog" },
+	{ id: "13", name: "American Eskimo Dog (Miniature)" },
+	{ id: "14", name: "American Foxhound" },
+	{ id: "15", name: "American Pit Bull Terrier" },
+	{ id: "16", name: "American Staffordshire Terrier" },
+	{ id: "17", name: "American Water Spaniel" },
+	{ id: "18", name: "Anatolian Shepherd Dog" },
+	{ id: "19", name: "Appenzeller Sennenhund" },
+	{ id: "21", name: "Australian Cattle Dog" },
+	{ id: "22", name: "Australian Kelpie" },
+	{ id: "23", name: "Australian Shepherd" },
+	{ id: "24", name: "Australian Terrier" },
+	{ id: "25", name: "Azawakh" },
+	{ id: "26", name: "Barbet" },
+	{ id: "28", name: "Basenji" },
+	{ id: "29", name: "Basset Bleu de Gascogne" },
+	{ id: "30", name: "Basset Hound" },
+	{ id: "31", name: "Beagle" },
+	{ id: "32", name: "Bearded Collie" },
+	{ id: "33", name: "Beauceron" },
+	{ id: "34", name: "Bedlington Terrier" },
+	{ id: "36", name: "Belgian Malinois" },
+	{ id: "38", name: "Belgian Tervuren" },
+	{ id: "41", name: "Bernese Mountain Dog" },
+	{ id: "42", name: "Bichon Frise" },
+	{ id: "43", name: "Black and Tan Coonhound" },
+	{ id: "45", name: "Bloodhound" },
+	{ id: "47", name: "Bluetick Coonhound" },
+	{ id: "48", name: "Boerboel" },
+	{ id: "50", name: "Border Collie" },
+	{ id: "51", name: "Border Terrier" },
+	{ id: "53", name: "Boston Terrier" },
+	{ id: "54", name: "Bouvier des Flandres" },
+	{ id: "55", name: "Boxer" },
+	{ id: "56", name: "Boykin Spaniel" },
+	{ id: "57", name: "Bracco Italiano" },
+	{ id: "58", name: "Briard" },
+	{ id: "59", name: "Brittany" },
+	{ id: "61", name: "Bull Terrier" },
+	{ id: "62", name: "Bull Terrier (Miniature)" },
+	{ id: "64", name: "Bullmastiff" },
+	{ id: "65", name: "Cairn Terrier" },
+	{ id: "67", name: "Cane Corso" },
+	{ id: "68", name: "Cardigan Welsh Corgi" },
+	{ id: "69", name: "Catahoula Leopard Dog" },
+	{ id: "70", name: "Caucasian Shepherd (Ovcharka)" },
+	{ id: "71", name: "Cavalier King Charles Spaniel" },
+	{ id: "76", name: "Chesapeake Bay Retriever" },
+	{ id: "78", name: "Chinese Crested" },
+	{ id: "79", name: "Chinese Shar-Pei" },
+	{ id: "80", name: "Chinook" },
+	{ id: "81", name: "Chow Chow" },
+	{ id: "84", name: "Clumber Spaniel" },
+	{ id: "86", name: "Cocker Spaniel" },
+	{ id: "87", name: "Cocker Spaniel (American)" },
+	{ id: "89", name: "Coton de Tulear" },
+	{ id: "92", name: "Dalmatian" },
+	{ id: "94", name: "Doberman Pinscher" },
+	{ id: "95", name: "Dogo Argentino" },
+	{ id: "98", name: "Dutch Shepherd" },
+	{ id: "101", name: "English Setter" },
+	{ id: "102", name: "English Shepherd" },
+	{ id: "103", name: "English Springer Spaniel" },
+	{ id: "104", name: "English Toy Spaniel" },
+	{ id: "105", name: "English Toy Terrier" },
+	{ id: "107", name: "Eurasier" },
+	{ id: "108", name: "Field Spaniel" },
+	{ id: "110", name: "Finnish Lapphund" },
+	{ id: "111", name: "Finnish Spitz" },
+	{ id: "113", name: "French Bulldog" },
+	{ id: "114", name: "German Pinscher" },
+	{ id: "115", name: "German Shepherd Dog" },
+	{ id: "116", name: "German Shorthaired Pointer" },
+	{ id: "119", name: "Giant Schnauzer" },
+	{ id: "120", name: "Glen of Imaal Terrier" },
+	{ id: "121", name: "Golden Retriever" },
+	{ id: "123", name: "Gordon Setter" },
+	{ id: "124", name: "Great Dane" },
+	{ id: "125", name: "Great Pyrenees" },
+	{ id: "127", name: "Greyhound" },
+	{ id: "128", name: "Griffon Bruxellois" },
+	{ id: "129", name: "Harrier" },
+	{ id: "130", name: "Havanese" },
+	{ id: "134", name: "Irish Setter" },
+	{ id: "135", name: "Irish Terrier" },
+	{ id: "137", name: "Irish Wolfhound" },
+	{ id: "138", name: "Italian Greyhound" },
+	{ id: "140", name: "Japanese Chin" },
+	{ id: "141", name: "Japanese Spitz" },
+];
+
+const dogsURL = "https://api.thedogapi.com/v1/";
+const catsURL = "https://api.thecatapi.com/v1/";
 
 const App = () => {
 	const [breedId, setBreedId] = useState("");
 	const [data, setData] = useState([]);
 	const [bio, setBio] = useState([]);
+	const [animalType, setAnimalType] = useState(false);
+
+	const options = useMemo(() => {
+		return animalType ? optionsDogs : optionsCats;
+	}, [animalType]);
+
+	const header = useMemo(() => {
+		return {
+			method: "GET",
+			headers: {
+				"x-api-key": animalType
+					? process.env.REACT_APP_DOG_API_KEY
+					: process.env.REACT_APP_CAT_API_KEY,
+			},
+		};
+	}, [animalType]);
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
@@ -93,13 +211,17 @@ const App = () => {
 		setBreedId(id);
 	};
 
+	// get image
 	useEffect(() => {
+		console.log("fetching image");
+		const url =
+			(animalType ? dogsURL : catsURL) +
+			`images/search?order=ASC&limit=100&page=0&breed_ids=${breedId}`;
+
 		if (breedId !== "") {
 			console.log(`looking for ${breedId}`);
-			fetch(
-				`https://api.thecatapi.com/v1/images/search?order=ASC&limit=100&page=0&breed_ids=${breedId}`,
-				header
-			)
+
+			fetch(url, header)
 				.then((response) => {
 					return response.json();
 				})
@@ -111,11 +233,19 @@ const App = () => {
 					console.log(error);
 				});
 		}
-	}, [breedId]);
+	}, [breedId, header, animalType]);
 
 	useEffect(() => {
+		setBreedId("");
+		setBio([]);
+	}, [animalType]);
+
+	//get breeds data
+	useEffect(() => {
+		const url = (animalType ? dogsURL : catsURL) + "breeds";
+		console.log("looking for bio");
 		if (bio.length === 0) {
-			fetch(`https://api.thecatapi.com/v1/breeds`, header)
+			fetch(url, header)
 				.then((response) => {
 					return response.json();
 				})
@@ -127,104 +257,96 @@ const App = () => {
 					console.log(error);
 				});
 		}
-	}, [bio]);
+	}, [bio, header, animalType]);
 
 	return (
 		<>
-			<Box
-				sx={{
-					width: "100vw",
-					height: "10vh",
-					backgroundColor: "primary.main",
-					display: "flex",
-					justifyContent: "center",
-					alignItems: "center",
-				}}>
-				<Typography
-					sx={{
-						color: "white",
-						fontFamily: "Audiowide, san-serif",
-						fontSize: { xl: "2.5rem", lg: "2.5rem", md: "1.5rem", sm: "1.5rem", xs: "1.5rem" },
-					}}>
-					Welcome to the Pet Wiki
-				</Typography>
-			</Box>
+			<Header
+				animalType={animalType}
+				switchHandler={() => {
+					setAnimalType((type) => !type);
+				}}
+			/>
 			<Box
 				sx={{
 					display: "flex",
-					flexDirection: { xl: "row", lg: "row", md: "column", sm: "column", xs: "column" },
-					width: "100vw",
-					height: "90vh",
-					mt: "2vh",
+					flexDirection: {
+						xl: "row",
+						lg: "column",
+						md: "column",
+						sm: "column",
+						xs: "column",
+					},
+					justifyContent: {
+						xl: "space-between",
+					},
 				}}>
 				<CssBaseline />
 				<Box
 					sx={{
-						width: { xl: "45%", lg: "45%", md: "100%", sm: "100%", xs: "100%" },
-						height: { xl: "100%", lg: "100%", md: "65%", sm: "65%", xs: "65%" },
 						px: "4%",
 						boxSizing: "border-box",
 						mb: 3,
 					}}>
-					<Box
-						component="form"
-						onSubmit={handleSubmit}
-						sx={{
-							display: "flex",
-							flexDirection: "row",
-							alignItems: "center",
-							width: "100%",
-							height: "5%",
-							py: "10%",
-						}}>
-						<Autocomplete
-							id="breed-combo-box"
-							options={options}
-							sx={{ width: "60%" }}
-							getOptionLabel={(option) => option.name}
-							renderInput={(params) => (
-								<TextField required {...params} name="breedId" label="Select Breed" />
-							)}
-						/>
-						<Button
-							type="submit"
-							size="large"
-							variant="contained"
-							color="primary"
-							sx={{ ml: "2%" }}>
-							Search
-						</Button>
-					</Box>
+					<Searchbar
+						animalType={animalType}
+						handleSubmit={handleSubmit}
+						options={options}
+					/>
+
 					{data.length !== 0 ? (
 						<ImageDisplay
 							data={data}
 							sx={{
-								width: "100%",
-								height: "70%",
-								// border: "3px solid red"
+								width: {
+									xs: "90vw",
+									sm: "90vw",
+									md: "90vw",
+									lg: "90vw",
+									xl: "40vw",
+								},
+								height: {
+									xs: "70vh",
+									sm: "70vh",
+									md: "70vh",
+									lv: "60vh",
+									xl: "63vh",
+								},
+								border: "5px solid black",
 							}}
 						/>
 					) : (
 						<Box
 							sx={{
-								width: "100%",
-								height: "70%",
+								width: {
+									xs: "90vw",
+									sm: "90vw",
+									md: "90vw",
+									lg: "90vw",
+									xl: "40vw",
+								},
+								height: {
+									xs: "70vh",
+									sm: "70vh",
+									md: "70vh",
+									lv: "60vh",
+									xl: "63vh",
+								},
 								// border: "3px solid red",
-								backgroundColor: "primary.main",
+								backgroundColor: animalType ? "success.light" : "primary.main",
 							}}></Box>
 					)}
 				</Box>
 				<Box
 					sx={{
-						width: { xl: "65%", lg: "65%", md: "100%", sm: "100%", xs: "100%" },
-						height: { xl: "100%", lg: "100%", md: "35%", sm: "35%", xs: "35%" },
-						overflow: "auto",
+						// overflow: { xl: "auto" },
+						px: "4%",
 						boxSizing: "border-box",
 						mb: 5,
 					}}>
-					{breedId !== "" && (
-						<InfoDisplay
-							bio={bio.find((value) => value.id === breedId)}
+					{breedId !== "" && !animalType && (
+						<InfoDisplayCat
+							bio={bio.find((value) => value.id.toString() === breedId) || {}}
 							sx={{
 								display: "flex",
 								flexDirection: "column",
@@ -235,7 +357,36 @@ const App = () => {
 									sm: "center",
 									xs: "center",
 								},
-								textAlign: { xl: "left", lg: "left", md: "center", sm: "center", xs: "center" },
+								textAlign: {
+									xl: "left",
+									lg: "left",
+									md: "center",
+									sm: "center",
+									xs: "center",
+								},
+							}}
+						/>
+					)}
+					{breedId !== "" && animalType && (
+						<InfoDisplayDog
+							bio={bio.find((value) => value.id.toString() === breedId) || {}}
+							sx={{
+								display: "flex",
+								flexDirection: "column",
+								alignItems: {
+									xl: "flex-start",
+									lg: "flex-start",
+									md: "center",
+									sm: "center",
+									xs: "center",
+								},
+								textAlign: {
+									xl: "left",
+									lg: "left",
+									md: "center",
+									sm: "center",
+									xs: "center",
+								},
 							}}
 						/>
 					)}
