@@ -1,7 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useRef } from "react";
 import { Button, Autocomplete, TextField, Box } from "@mui/material";
 
 const Searchbar = ({ animalType, handleSubmit, options }) => {
+	const searchButton = useRef();
+
+	useEffect(() => {
+		const handleEvent = (event) => {
+			if (event.key === "enter") searchButton.current.click();
+		};
+		window.addEventListener("keydown", handleEvent);
+		return () => {
+			window.removeEventListener("keydown", handleEvent);
+		};
+	}, []);
+
 	return (
 		<Box
 			component="form"
@@ -34,7 +47,11 @@ const Searchbar = ({ animalType, handleSubmit, options }) => {
 				size="large"
 				variant="contained"
 				color={animalType ? "success" : "primary"}
-				sx={{ ml: "2%" }}>
+				sx={{ ml: "2%" }}
+				onClick={() => {
+					console.log("button clicked");
+				}}
+				ref={searchButton}>
 				Search
 			</Button>
 		</Box>
