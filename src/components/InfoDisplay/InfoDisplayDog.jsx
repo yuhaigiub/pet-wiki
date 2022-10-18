@@ -35,19 +35,23 @@ const InfoDisplayDog = ({ bio, sx }) => {
 			</Typography>
 			{/* <Typography sx={{ my: 2 }}>{bio.description}</Typography> */}
 			<Typography sx={{ mb: "5%" }}>
-				Temperament: {bio.temperament || "undefined"}
+				Temperament: {bio.temperament || "unknown"}
 			</Typography>
 			<Typography sx={{ mb: "5%" }}>
-				Bred for: {bio.bred_for || "undefined"}
+				Bred for: {bio.bred_for || "unknown"}
 			</Typography>
 			<Typography sx={{ mb: "5%" }}>
-				Height: {bio.height ? bio.height.metric + "(meters)" : "undefined"}
+				Height: {bio.height ? bio.height.metric + "(meters)" : "unknown"}
 			</Typography>
 			<Typography sx={{ mb: "5%" }}>
-				Weight: {bio.weight ? bio.weight.metric + "(kilograms)" : "undefined"}
+				Weight: {bio.weight ? bio.weight.metric + "(kilograms)" : "unknown"}
 			</Typography>
-			<Typography sx={{ mb: "5%" }}>Life Span: {bio.life_span}</Typography>
-			<Typography sx={{ mb: "5%" }}>Origin: {bio.origin}</Typography>
+			<Typography sx={{ mb: "5%" }}>
+				Life Span: {bio.life_span || "unknown"}
+			</Typography>
+			<Typography sx={{ mb: "5%" }}>
+				Origin: {bio.origin || "unknown"}
+			</Typography>
 		</Box>
 	);
 };
